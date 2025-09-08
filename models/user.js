@@ -1,39 +1,26 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db/db");
-const users = require("./user");
-const category = require("./category");
+const posts = require("./post");
 
-const posts = sequelize.define(
-  "posts",
+const users = sequelize.define(
+  "users",
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    title: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    content: {
+    username: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    UserId: {
+    password: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: users,
-        key: "id",
-      },
-    },
-    CategoryId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: category,
-        key: "id",
-      },
     },
   },
   {
@@ -41,4 +28,4 @@ const posts = sequelize.define(
   }
 );
 
-module.exports = posts
+module.exports = users
