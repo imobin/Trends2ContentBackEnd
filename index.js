@@ -6,7 +6,7 @@ const category = require("./models/category");
 const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
 const verifyToken = require("./midleware/verification");
-
+const AIblog = require("./AIblog")
 dotenv.config();
 // console.log(process.env.JWT_SECRET);
 const app = express();
@@ -62,6 +62,20 @@ app.post("/creatPost", verifyToken, async (req, res) => {
     res.json("there was an error form here:", error);
   }
 });
+
+
+app.post("/generatePost", async (req, res) => {
+     const { keywords } = req.body;
+    // CategoryId  
+  try {
+    const AIresult = await AIblog(keywords)
+    res.json(AIresult);
+  } catch (error) {
+    console.log(error)
+    res.json("there was an error form here:", error);
+  }
+});
+
 
 
 app.put("/creatPost/:id", verifyToken, (req, res) => {
@@ -252,7 +266,6 @@ app.delete("/categoryList/:id", async (req, res) => {
         res.json("there was an error2:", error.message);
     }
 })
-
 
 
 sequelize.sync();

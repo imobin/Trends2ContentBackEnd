@@ -16,7 +16,9 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "nodeman": "^1.1.2",
+    "openai": "^5.20.1",
     "sequelize": "^6.37.7",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "zod": "^3.25.76"
   }
 }
