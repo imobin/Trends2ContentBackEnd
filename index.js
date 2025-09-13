@@ -7,6 +7,8 @@ const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
 const verifyToken = require("./midleware/verification");
 const AIblog = require("./AIblog")
+const googleTrends = require("google-trends-api");
+
 dotenv.config();
 // console.log(process.env.JWT_SECRET);
 const app = express();
@@ -79,18 +81,18 @@ app.post("/generatePost", async (req, res) => {
 
 
 app.put("/creatPost/:id", verifyToken, (req, res) => {
-  // const reqId = Number(req.params.id);
-  // const { title, content, UserId  } = req.body;
-  // res.send(req.body)
-  // try {
-  //   const updated = posts.update(
-  //     { title, content, UserId, CategoryId },
-  //     { where: { id: reqId } }
-  //   );
-  //   res.send("Post Updated");
-  // } catch (error) {
-  //   res.json("there was an error:", error.message);
-  // }
+  const reqId = Number(req.params.id);
+  const { title, content, UserId  } = req.body;
+  res.send(req.body)
+  try {
+    const updated = posts.update(
+      { title, content, UserId, CategoryId },
+      { where: { id: reqId } }
+    );
+    res.send("Post Updated");
+  } catch (error) {
+    res.json("there was an error:", error.message);
+  }
 });
 
 
@@ -266,6 +268,144 @@ app.delete("/categoryList/:id", async (req, res) => {
         res.json("there was an error2:", error.message);
     }
 })
+
+// app.get("/trends", async (req, res) =>{
+//   try {
+//     const currentDate = new Date("2015/09/01");
+//     const formattedDate = currentDate.toISOString().split("T")[0];
+//     const vv = await googleTrends.dailyTrends({
+//             trendDate: formattedDate,
+//             geo: "US",
+//     }, (r, e) => {
+//       if(r){
+//         consol.log("I'm R", r)
+//       }
+//       console.log("I'm E",e);
+//     })
+//     res.send(vv)
+//     } catch (error) {
+//         res.json("there was an error2:", error);
+//     }
+// })
+
+
+app.get("/trends",  (req, res) =>{
+googleTrends.realTimeTrends({
+   category: 'all',
+   geo: 'US',})
+.then(function(results){
+  console.log('These results are awesome', results);
+  res.send(results)
+})
+.catch(function(err){
+  console.error('Oh no there was an error', err);
+});
+})
+
+// provides value over the time (searched trends)
+app.get("/trend1",  (req, res) =>{
+googleTrends.interestOverTime({
+   keyword: 'game', geo: "US"})
+.then(function(results){
+  console.log('These results are awesome', results);
+  res.send(JSON.parse(results))
+})
+.catch(function(err){
+  console.error('Oh no there was an error', err);
+});
+})
+
+// works only for the US:
+app.get("/trend2",  (req, res) =>{
+googleTrends.interestByRegion({
+   keyword: 'game', geo: "US"})
+.then(function(results){
+  console.log('These results are awesome', results);
+  res.send(JSON.parse(results))
+})
+.catch(function(err){
+  console.error('Oh no there was an error', err);
+});
+})
+
+// related trends:
+
+app.get("/trend3",  (req, res) =>{
+googleTrends.relatedQueries({keyword: "game"})
+.then(function(results){
+  console.log('These results are awesome', results);
+  res.send(results)
+})
+.catch(function(err){
+  console.error('Oh no there was an error', err);
+});
+})
+
+
+
+
+// app.get("/trends", async (req, res) =>{
+//   googleTrends.dailyTrends({
+//    trendDate: new Date('2019-01-10'),
+//    geo: 'US',
+// }, function(err, results) {
+//    if (err) {
+//      console.log('oh no error!', err);
+//      res.send("err", err)
+//    }else{
+//      console.log(results);
+//      res.send(results)
+//    }
+// });
+// })
+
+
+
+
+// googleTrends.interestOverTime({keyword: 'Women\'s march'})
+// .then(function(results){
+//   console.log('These results are awesome', results);
+// })
+// .catch(function(err){
+//   console.error('Oh no there was an error', err);
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+// export async function POST(request: Request) {
+
+//   return googleTrends.dailyTrends(
+//     {
+//       trendDate: formattedDate,
+//       geo: "US",
+//     },
+//     function (err: any, results: any) {
+//       if (err) {
+//         // console.log(err);
+//         return Response.json({ results: err });
+//       } else {
+//         const data: ApiTrendingSearchesResponse = JSON.parse(results);
+//         //console.log(data);
+//         return Response.json({ results: data });
+//       }
+//     }
+//   );
+// }
+
+
+
+
+
+
 
 
 sequelize.sync();
