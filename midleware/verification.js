@@ -24,6 +24,7 @@ const decoded = jwt.verify(token, process.env.JWT_SECRET);
 //   }
 
   // Proceed to the next middleware or route handler
+  // res.send(decoded)
   return next();
 }
 

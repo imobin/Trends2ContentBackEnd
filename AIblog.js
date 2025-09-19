@@ -38,6 +38,6 @@ const response = await client.responses.create({
  return response.output_text;
 }
 
-AIblog(["snow", "snowman", "frozen"])
+// AIblog(["snow", "snowman", "frozen"])
 
 module.exports = AIblog
