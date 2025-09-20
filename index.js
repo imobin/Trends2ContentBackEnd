@@ -51,7 +51,7 @@ app.get("/home/:id", async (req, res) => {
   }
 });
 
-app.post("/creatPost", async (req, res) => {
+app.post("/creatPost", verifyToken ,async (req, res) => {
   const { title, content, UserId, CategoryId } = req.body;
   const input = req.body;
   newPost = req.body;
@@ -84,8 +84,8 @@ app.post("/generatePost", async (req, res) => {
 
 app.put("/creatPost/:id", verifyToken, (req, res) => {
   const reqId = Number(req.params.id);
-  const { title, content, UserId } = req.body;
-  res.send(req.body);
+  const { title, content, UserId, CategoryId } = req.body;
+  // res.send(req.body);
   try {
     const updated = posts.update(
       { title, content, UserId, CategoryId },
